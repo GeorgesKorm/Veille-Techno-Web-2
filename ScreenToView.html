@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+    <header>
+        <style>
+            #info {
+                max-width: 900px;
+                margin: auto;
+            }
+
+            div2 {
+                border: 1px solid red;
+            }
+
+            * {
+                padding: 0px;
+                margin: 0px;
+                box-sizing: border-box;
+            }
+
+            #svgCanvas {
+                border: 1px solid rgb(25, 0, 255);
+                cursor: crosshair;
+                user-select: none;
+            }
+
+            #mouseInfo {
+                font-family: sans-serif;
+                display: grid;
+                grid-gap: 1em;
+                grid-template-columns: 1fr 1fr 1fr 0.8fr 1fr 0.5fr;
+            }
+
+            #mouseInfo span {
+                color: dodgerblue;
+                font-weight: bold;
+            }
+
+            #canvasInfo {
+                width: 100%;
+                display: grid;
+                grid-template-columns: 1.5fr 1fr 1fr 1.3fr;
+                font-family: sans-serif;
+                grid-gap: 1em;
+                align-items: center;
+                user-select: none;
+            }
+
+            #zoomContainer {
+                display: grid;
+                grid-template-columns: 1fr 2fr 0.6fr 0.6fr;
+                align-items: center;
+            }
+
+            #canvasInfo button {
+                width: 30px;
+                font-size: large;
+            }
+
+            #canvasInfo span {
+                color: dodgerblue;
+                font-weight: bold;
+            }
+
+            .svgObject:hover,
+            .svgObject *:hover {
+                stroke: rgba(0, 0, 0, 0.5);
+                fill: rgba(27, 127, 127, 0.5);
+                cursor: grab;
+                user-select: none;
+            }
+
+            #canvasContainer {
+                margin: auto;
+                overflow: scroll;
+                width: 900px;
+                height: 900px;
+                border: solid gray;
+            }
+
+            input[type=checkbox] {
+                transform: scale(1.8);
+                margin-left: 10px;
+            }
+        </style>
+    </header>
+
+    <body>
+        <div id="info">
+            <div id="canvasInfo">
+                <div>
+                    Canvas ViewBox : <span id="canvasBox">0 0 2000 2000</span>
+                </div>
+                <div>
+                    Canvas Width : <span id="canvasWidth">1000px</span>
+                </div>
+                <div>
+                    Canvas Height : <span id="canvasHeight">1000px</span>
+                </div>
+                <div id="zoomContainer">
+                    Zoom : <span id="zoom">1 </span> <button id="zoomOut">-</button> <button id="zoomIn">+</button>
+                </div>
+            </div>
+            <br>
+            <div id="mouseInfo">
+                <div>
+                    Mouse : <span id="mouse">up</span>
+                </div>
+                <div>
+                    Offset : <span id="screenX">0</span>,&nbsp;<span id="screenY">0</span>
+                </div>
+                <div>
+                    Canvas : <span id="canvasX">0</span>,&nbsp;<span id="canvasY">0</span>
+                </div>
+                <div>
+                    Wheel : <span id="wheel">0, 0 </span>
+                </div>
+                <div>
+                    Scroll : <span id="scroll">0, 0 </span>
+                </div>
+                <div>
+                    Grid : <input type="checkbox" id="grid" checked>
+                </div>
+            </div>
+            <br>
+        </div>
+        <div id="canvasContainer">
+            <svg id="svgCanvas" width="1000px" height="1000px" viewbox="0 0 2000 2000">
+                <polygon class="svgObject" fill="#F8F65F" stroke="#F7BA3F" style="transform: translate(0px, 0px)"
+                    points="82.99,23.438 69.055,66.212 24.069,66.247 60.443,92.716 46.575,135.511 
+	82.99,109.098 119.405,135.511 105.537,92.716 141.91,66.247 96.924,66.211 " />
+
+                <g class="svgObject" style="transform: translate(0px, 0px)">
+                    <g style="transform: translate(0px, 0px) scale(0.4)">
+                        <polygon fill="#DE600E" stroke="#000000"
+                            points="572.8,114.8 572.8,277.3 713.6,358.6 713.6,196.1 	" />
+                        <path fill="#FFFFFF" stroke="#000000" d="M779.1,163.4" />
+                        <polygon fill="#DE600E" stroke="#000000"
+                            points="779.1,0.9 779.1,163.4 919.9,244.6 919.9,82.1 	" />
+                        <polygon fill="#F8E4D7" stroke="#000000"
+                            points="779.1,163.4 919.9,244.6 779.1,325.9 638.4,244.6 	" />
+                        <polygon fill="#DE600E" stroke="#000000"
+                            points="779.1,245.7 779.1,408.2 919.9,489.4 919.9,326.9 	" />
+                        <polygon fill="#F8E4D7" stroke="#000000"
+                            points="779.1,408.2 919.9,489.4 779.1,570.7 638.4,489.4 	" />
+                        <g>
+                            <polygon fill="#DE600E" stroke="#000000"
+                                points="779.1,490.5 779.1,653 919.9,734.2 919.9,571.7 		" />
+                            <polygon fill="#F9B57F" stroke="#000000"
+                                points="779.1,653 638.4,734.2 638.4,571.7 779.1,490.5 		" />
+                            <polygon fill="#F8E4D7" stroke="#000000"
+                                points="779.1,653 919.9,734.2 779.1,815.5 638.4,734.2 		" />
+                        </g>
+                        <g>
+                            <polygon fill="#DE600E" stroke="#000000"
+                                points="779.1,735.3 779.1,897.8 919.9,979 919.9,816.5 		" />
+                            <polygon fill="#F9B57F" stroke="#000000"
+                                points="779.1,897.8 638.4,979 638.4,816.5 779.1,735.3 		" />
+                            <polygon fill="#F8E4D7" stroke="#000000"
+                                points="779.1,897.8 919.9,979 779.1,1060.3 638.4,979 		" />
+                        </g>
+                        <g>
+                            <polygon fill="#DE600E" stroke="#000000"
+                                points="566.7,613.6 566.7,776.1 707.4,857.4 707.4,694.9 		" />
+                            <polygon fill="#F9B57F" stroke="#000000"
+                                points="566.7,776.1 425.9,857.4 425.9,694.9 566.7,613.6 		" />
+                            <polygon fill="#F8E4D7" stroke="#000000"
+                                points="566.7,776.1 707.4,857.4 566.7,938.6 425.9,857.4 		" />
+                        </g>
+                        <g>
+                            <polygon fill="#DE600E" stroke="#000000"
+                                points="354.2,492 354.2,654.5 494.9,735.8 494.9,573.3 		" />
+                            <polygon fill="#F9B57F" stroke="#000000"
+                                points="354.2,654.5 213.5,735.8 213.5,573.3 354.2,492 		" />
+                            <polygon fill="#F8E4D7" stroke="#000000"
+                                points="354.2,654.5 494.9,735.8 354.2,817 213.5,735.8 		" />
+                        </g>
+                        <g>
+                            <polygon fill="#DE600E" stroke="#000000"
+                                points="141.7,370.4 141.7,532.9 282.5,614.1 282.5,451.6 		" />
+                            <polygon fill="#F9B57F" stroke="#000000"
+                                points="141.7,532.9 1,614.1 1,451.6 141.7,370.4 		" />
+                            <polygon fill="#F8E4D7" stroke="#000000"
+                                points="141.7,532.9 282.5,614.1 141.7,695.4 1,614.1 		" />
+                        </g>
+                        <g>
+                            <polygon fill="#DE600E" stroke="#000000"
+                                points="357.3,242.6 357.3,405.1 498,486.3 498,323.8 		" />
+                            <polygon fill="#F9B57F" stroke="#000000"
+                                points="357.3,405.1 216.5,486.3 216.5,323.8 357.3,242.6 		" />
+                            <polygon fill="#F8E4D7" stroke="#000000"
+                                points="357.3,405.1 498,486.3 357.3,567.6 216.5,486.3 		" />
+                        </g>
+                        <polygon fill="#F9B57F" stroke="#000000"
+                            points="572.8,277.3 432.1,358.6 432.1,196.1 572.8,114.8 	" />
+                        <polygon fill="#F8E4D7" stroke="#000000"
+                            points="572.8,277.3 713.6,358.6 572.8,439.8 432.1,358.6 	" />
+                        <polygon fill="#F9B57F" stroke="#000000"
+                            points="779.1,408.2 638.4,489.4 638.4,326.9 779.1,245.7 	" />
+                        <polygon fill="#F9B57F" stroke="#000000"
+                            points="779.1,163.4 638.4,244.6 638.4,82.1 779.1,0.9 	" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+    </body>
+    <script>
+        const svgns = "http://www.w3.org/2000/svg";
+        let canvas = null;
+        let canvasWidth = 0;
+        let viewBox = null;
+        let mouseIsDown = false;
+        let mouseDownPos = null;
+        let mouseCurrentPos = null;
+        let target = null;
+        let currentTargetTranslation = null;
+        class Point {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+            }
+        }
+
+        class Canvas {
+            constructor(id) {
+                this.panel = document.getElementById(id);
+                this.viewBox = this.getViewBox();
+                this.origin = new Point(this.viewBox.left, this.viewBox.top);
+                this.width = parseInt(this.panel.getAttribute("width"));
+                if (isNaN(this.width))
+                    this.width = this.viewBox.rigth;
+                this.height = parseInt(this.panel.getAttribute("height"));
+                if (isNaN(this.height))
+                    this.height = this.viewBox.bottom;
+                this.snapToGrid = false;
+                this.gridSize = 100;
+                this.insertGrig();
+                this.zoom = 1;
+                this.zoomMax = 5;
+                this.zoomMin = 0.5;
+                this.initialWidth = this.width;
+                this.initialheight = this.height;
+                this.grid = true;
+                this.applyZoom();
+            }
+
+            getViewBox() {
+                let viewBoxText = this.panel.getAttribute("viewBox").split(" ");
+                let viewBox = { left: 0, top: 0, right: 0, bottom: 0 }
+                viewBox.left = parseFloat(viewBoxText[0]);
+                viewBox.top = parseFloat(viewBoxText[1]);
+                viewBox.rigth = parseFloat(viewBoxText[2]);
+                viewBox.bottom = parseFloat(viewBoxText[3]);
+                return viewBox;
+            }
+
+            doSnapToGrid(val) {
+                let subGrid = this.gridSize / 10;
+                return Math.trunc((val + subGrid / 2) / subGrid) * subGrid;
+            }
+
+            screenToView(screenPos) {
+                let ratio = (this.viewBox.rigth - this.viewBox.left) / this.width;
+                let viewPos = new Point(screenPos.x * ratio + this.viewBox.left, screenPos.y * ratio + this.viewBox.top);
+                if (this.snapToGrid)
+                    return new Point(this.doSnapToGrid(viewPos.x), this.doSnapToGrid(viewPos.y));
+                return viewPos;
+            }
+
+            ViewToScreen(viewPos) {
+                let ratio = (this.viewBox.rigth - this.viewBox.left) / this.width;
+                let screenPos = new Point((viewPos.x - this.viewBox.left) / ratio, (viewPos.y - this.viewBox.top) / ratio);
+            }
+
+            insertGrig() {
+                this.snapToGrid = true;
+                for (let x = this.viewBox.left; x < this.viewBox.rigth; x += this.gridSize) {
+                    insertLine(this.panel, x, 0, x, this.viewBox.bottom, "lightGray", 1, "grid");
+                }
+                for (let y = this.viewBox.left; y < this.viewBox.rigth; y += this.gridSize) {
+                    insertLine(this.panel, 0, y, this.viewBox.rigth, y, "lightGray", 1, "grid");
+                }
+                for (let x = this.viewBox.left; x < this.viewBox.rigth; x += this.gridSize) {
+                    for (let y = this.viewBox.left; y < this.viewBox.rigth; y += this.gridSize) {
+                        insertText(this.panel, x + 10, y + 10, x + ", " + y, 0, 0.6, "grid");
+                    }
+                }
+            }
+
+            setGrid(grid) {
+                let gridItems = document.getElementsByClassName("grid");
+                this.grid = grid;
+                this.snapToGrid = grid;
+                Array.from(gridItems).forEach(element => {
+                    if (grid)
+                        element.style.visibility = "visible";
+                    else
+                        element.style.visibility = "hidden";
+                });
+            }
+
+            applyZoom() {
+                this.width = this.zoom * this.initialWidth;
+                this.height = this.zoom * this.initialheight;
+                this.panel.setAttribute("width", this.width);
+                this.panel.setAttribute("height", this.height);
+            }
+            zoomIn() {
+                this.zoom = this.zoom + 0.1;
+                if (this.zoom <= this.zoomMax)
+                    this.applyZoom();
+                else
+                    this.zoom = this.zoomMax;
+            }
+
+            zoomOut() {
+                this.zoom = this.zoom - 0.1;
+                if (this.zoom >= this.zoomMin)
+                    this.applyZoom();
+                else
+                    this.zoom = this.zoomMin;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            canvas = new Canvas("svgCanvas");
+            installMouseEvents(canvas);
+            mouseDownPos = new Point(0, 0);
+            mouseCurrentPos = new Point(0, 0);
+            AddObjectInCanvas();
+        });
+
+        function installMouseEvents() {
+            canvas.panel.onmousedown = mouseDown;
+            canvas.panel.onmousemove = mouseMove;
+            canvas.panel.onmouseup = mouseUp;
+            canvas.panel.parentNode.addEventListener("mousewheel", mouseWheel);
+            canvas.panel.parentNode.addEventListener("scroll", scroll);
+            document.getElementById("zoomOut").addEventListener("click", () => { canvas.zoomOut(); showZoomValue() });
+            document.getElementById("zoomIn").addEventListener("click", () => { canvas.zoomIn(); showZoomValue() });
+            document.getElementById("grid").addEventListener("change", toggleGrid);
+        }
+
+        function installObjectMouseEvents() {
+            let objects = document.getElementsByClassName("svgObject");
+            for (let o = 0; o < objects.length; o++) {
+                objects[o].onmousedown = function (e) {
+                    target = objects[o];
+                    currentTargetTranslation = getCurrentTranslation(target);
+                }
+                objects[o].onmouseup = function (e) {
+                    target = null;
+                }
+            }
+        }
+
+        function AddObjectInCanvas() {
+            let rect = insertRect(canvas.panel, 100, 100, 100, 100, "blue", "green", 2);
+            rect.classList.add("svgObject");
+            rect.style.transform = "translate(0px, 0px)";
+
+            rect = insertRect(canvas.panel, 300, 100, 50, 50, "orange", "black", 2);
+            rect.classList.add("svgObject");
+            rect.style.transform = "translate(0px, 0px)";
+            installObjectMouseEvents();
+        }
+
+        function showPosition(pos) {
+            let x = document.getElementById("screenX");
+            x.innerHTML = pos.x;
+            let y = document.getElementById("screenY");
+            y.innerHTML = pos.y;
+            let cpos = canvas.screenToView(pos);
+            let cx = document.getElementById("canvasX");
+            cx.innerHTML = cpos.x.toFixed(0);
+            let cy = document.getElementById("canvasY");
+            cy.innerHTML = cpos.y.toFixed(0);
+        }
+
+        function showZoomValue() {
+            let zoom = document.getElementById("zoom");
+            zoom.innerHTML = canvas.zoom.toFixed(1);
+            let width = document.getElementById("canvasWidth");
+            width.innerHTML = canvas.width.toFixed(0) + "px";
+            let height = document.getElementById("canvasHeight");
+            height.innerHTML = canvas.width.toFixed(0) + "px";
+        }
+        function showMouseStatus(down, shift = false) {
+            let mouseStatus = document.getElementById("mouse");
+            mouseStatus.innerHTML = (down ? "down" : "up") + " " + (shift == true ? "SHIFT" : "");
+        }
+        function showMouseWheel(delta) {
+            let wheel = document.getElementById("wheel");
+            wheel.innerHTML = delta.x + ", " + delta.y;
+        }
+
+        function mouseDown(e) {
+            mouseDownPos = new Point(e.offsetX, e.offsetY);
+            mouseIsDown = true;
+            showPosition(mouseDownPos);
+            showMouseStatus(mouseIsDown);
+        }
+        function mouseMove(e) {
+            mouseCurrentPos = new Point(e.offsetX, e.offsetY);
+            canvasMouseDownPos = canvas.screenToView(mouseDownPos);
+            canvasCurrentPoint = canvas.screenToView(mouseCurrentPos);
+            let delta = new Point(0, 0);
+            if (mouseIsDown && target != null) {
+                showMouseStatus(mouseIsDown, e.shiftKey);
+                let delta = {
+                    x: canvasCurrentPoint.x - canvasMouseDownPos.x + currentTargetTranslation.x,
+                    y: canvasCurrentPoint.y - canvasMouseDownPos.y + currentTargetTranslation.y
+                }
+                if (e.shiftKey) {
+                    if (Math.abs(delta.x) - Math.abs(delta.y) < 10) {
+                        delta.y = Math.sign(delta.y) * Math.Abs(delta.x);
+                    } else {
+                        if (delta.x > delta.y)
+                            delta.y = 0
+                        else
+                            delta.x = 0;
+                    }
+                }
+
+                target.style.transform = 'translate(' + delta.x + 'px,' + delta.y + 'px)';
+            }
+            showPosition(mouseCurrentPos);
+        }
+        function mouseUp(e) {
+            mouseIsDown = false;
+            showMouseStatus(mouseIsDown);
+        }
+        function mouseWheel(e) {
+            let delta = new Point(e.deltaX, e.deltaY);
+            showMouseWheel(delta);
+        }
+        function scroll(e) {
+            let scroll = document.getElementById("scroll");
+            scroll.innerHTML = e.target.scrollLeft.toFixed(0) + ", " + e.target.scrollTop.toFixed(0);
+        }
+        function toggleGrid(e) {
+            canvas.setGrid(e.target.checked);
+        }
+        function getCurrentTranslation(target) {
+            let translateProp = target.style.transform;
+            let cleaned = translateProp.replace("translate(", "").replace(")", "").replaceAll("px", "").replaceAll(" ", "").split(",");
+            return { x: parseInt(cleaned[0]), y: parseInt(cleaned[1]) };
+        }
+
+        function insertRect(panel, x, y, width, height, fill = "white", stroke = "black", strokeWidth = 1, css = "") {
+            let rect = document.createElementNS(svgns, "rect");
+            rect.setAttribute("x", x);
+            rect.setAttribute("y", y);
+            rect.setAttribute("width", width);
+            rect.setAttribute("height", height);
+            rect.setAttribute("fill", fill);
+            rect.setAttribute("stroke", stroke);
+            rect.setAttribute("stroke-width", strokeWidth);
+            if (css !== "")
+                rect.classList.add(css);
+            panel.appendChild(rect);
+            return rect;
+        }
+        function insertLine(panel, x1, y1, x2, y2, stroke = "black", strokeWidth = 1, css = "") {
+            let line = document.createElementNS(svgns, "line");
+            line.setAttribute("x1", x1);
+            line.setAttribute("y1", y1);
+            line.setAttribute("x2", x2);
+            line.setAttribute("y2", y2);
+            line.setAttribute("stroke", stroke);
+            line.setAttribute("stroke-width", strokeWidth);
+            if (css !== "")
+                line.classList.add(css);
+            panel.appendChild(line);
+            return line;
+        }
+        function insertText(panel, x, y, content, angle = 0, size = "1", css = "", family = "serif", style = "normal") {
+            let text = document.createElementNS(svgns, "text");
+            text.setAttribute("x", x);
+            text.setAttribute("y", y);
+            text.setAttribute("transform", "rotate(" + angle + "," + x + "," + y + ")");
+            text.setAttribute("font-size", size + "em");
+            text.setAttribute("font-family", family);
+            text.setAttribute("style", style);
+            text.innerHTML = content;
+            if (css !== "")
+                text.classList.add(css);
+            panel.appendChild(text);
+            return text;
+        }
+
+    </script>
+
+</html>
