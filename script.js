@@ -68,6 +68,7 @@ function init_UI() {
   });
 }
 
+
 function updatePointerAndLevel(mousePosX) {
   mousePosX = Math.round(mousePosX / (smallUnit / 2)) * (smallUnit / 2); // fait les bonds de .5 quand on bouge le curseur
   mousePosX = Math.max(0, Math.min(mousePosX, maxPosition)); //empêche de sortir "out of bounds"
@@ -88,7 +89,7 @@ function setPointerValue(value) {
   let x = value * (smallUnit / 0.2);
   x = Math.round(x / (smallUnit / 2)) * (smallUnit / 2); //s'assure que ça va bien pointer le 3 si on écrit 2.95 comme niveau
 
-  cursor.style.transform = "translate(" + value + "px, 0px)";
+  cursor.style.transform = "translate(" + x + "px, 0px)";
 
   updateColour(value,level)
 
