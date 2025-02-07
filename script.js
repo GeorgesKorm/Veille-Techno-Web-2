@@ -29,9 +29,7 @@ function init_UI() {
 
   let levelValue = coordinatesViewportX / smallUnit * 0.2;
   level.value = formatDecimal(levelValue, 1);
-  level.style.color = "rgb(" + levelValue / 10 * 255 + ",0 ,0)";
-  cursor.style.fill = "rgb(" + levelValue / 10 * 255 + ",0 ,0)";
-  cursor.style.stroke = "rgb(" + (255 - levelValue / 10 * 255) + ",0 ,0)";
+  updateColour(level.value,level)
 
   let mouseIsDown = false;
 
@@ -56,7 +54,7 @@ function init_UI() {
     if (!mouseIsDown) {
       let newVal = parseFloat(level.value);
       console.log(newVal)
-      if (newVal.toString() == 'NaN') { //Ça me semble absurde que newVal == NaN donne toujours false.
+      if (isNaN(newVal)) {
         newVal = 0;
       }
       if (newVal < 0) {
@@ -70,10 +68,9 @@ function init_UI() {
   });
 }
 
-
 function updatePointerAndLevel(mousePosX) {
-  mousePosX = Math.round(mousePosX / (smallUnit / 2)) * (smallUnit / 2);
-  mousePosX = Math.max(0, Math.min(mousePosX, maxPosition));
+  mousePosX = Math.round(mousePosX / (smallUnit / 2)) * (smallUnit / 2); // fait les bonds de .5 quand on bouge le curseur
+  mousePosX = Math.max(0, Math.min(mousePosX, maxPosition)); //empêche de sortir "out of bounds"
 
   const cursor = document.getElementById("cursor");
   const level = document.getElementById("level");
@@ -81,35 +78,28 @@ function updatePointerAndLevel(mousePosX) {
   cursor.style.transform = "translate(" + mousePosX + "px, 0px)";
 
   let levelValue = (mousePosX / smallUnit) * 0.2;
-  levelValue = Math.max(0, Math.min(levelValue, 10));
-
   level.value = formatDecimal(levelValue, 1);
-
-  let colour = (levelValue / 10) * 255;
-  level.style.color = "rgb(" + colour + ",0,0)";
-  cursor.style.fill = "rgb(" + colour + ",0,0)";
-  cursor.style.stroke = "rgb(" + (255 - colour) + ",0,0)";
-
+  updateColour(level.value,level)
 }
 function setPointerValue(value) {
-  value = Math.max(0, Math.min(value, 9.9));
-
   const cursor = document.getElementById("cursor");
   const level = document.getElementById("level");
 
   let x = value * (smallUnit / 0.2);
-  x = Math.round(x / (smallUnit / 2)) * (smallUnit / 2);
-  x = Math.max(0, Math.min(x, maxPosition));
+  x = Math.round(x / (smallUnit / 2)) * (smallUnit / 2); //s'assure que ça va bien pointer le 3 si on écrit 2.95 comme niveau
 
-  cursor.style.transform = "translate(" + x + "px, 0px)";
+  cursor.style.transform = "translate(" + value + "px, 0px)";
 
+  updateColour(value,level)
+
+  level.value = formatDecimal(value, 1);
+}
+
+function updateColour(value, level){
   let colour = (value / 10) * 255;
   level.style.color = "rgb(" + colour + ",0,0)";
   cursor.style.fill = "rgb(" + colour + ",0,0)";
   cursor.style.stroke = "rgb(" + (255 - colour) + ",0,0)";
-
-  level.value = formatDecimal(value, 1);
-
 }
 
 init_UI()
